@@ -1,3 +1,4 @@
+/* General reset and styling */
 * {
     margin: 0;
     padding: 0;
@@ -10,7 +11,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    padding: 20px; /* Add padding to prevent cut-off at the top */
 }
 
 .container {
@@ -19,29 +20,100 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 400px;
+    max-width: 100%;
+    margin: 20px 0; /* Add margin to ensure spacing from viewport edges */
 }
 
 h1 {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     text-align: center;
 }
 
+h2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    text-align: center;
+    color: #333;
+}
+
+h3 {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    text-align: center;
+    color: #555;
+}
+
+/* Doctor and Practice Name Input Styling */
 .input-group {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 15px;
 }
 
-label {
-    display: block;
+.input-group label {
+    font-size: 14px;
+    color: #333;
     margin-bottom: 5px;
 }
 
-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+.input-group input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
 }
 
+/* Input Table Styling */
+table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+table td {
+    padding: 10px;
+    vertical-align: middle;
+}
+
+table td:first-child {
+    width: 40%; /* Label column width */
+    text-align: right;
+    padding-right: 10px;
+}
+
+table td:nth-child(2) input[type="range"] {
+    width: 100%; /* Slider column width */
+}
+
+table td:last-child {
+    width: 10%; /* Value column width */
+    text-align: right; /* Align values to the right */
+    padding-left: 10px;
+}
+
+/* Output Table Styling */
+.output-table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.output-table td {
+    padding: 8px;
+    vertical-align: middle;
+}
+
+.output-table td:first-child {
+    text-align: left;
+    width: 70%;
+}
+
+.output-table td:last-child {
+    text-align: right; /* Align numeric values to the right */
+    font-weight: bold;
+}
+
+/* Button and Result Styling */
 button {
     width: 100%;
     padding: 10px;
@@ -57,30 +129,10 @@ button:hover {
     background-color: #218838;
 }
 
-#result {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-/* Styling tweaks for sliders and display */
-input[type="range"] {
-    width: 100%;
-    margin: 10px 0;
-}
-
-#starts-value,
-#treatmentFee-value {
-    font-weight: bold;
-    margin-left: 10px;
-}
-
-/* Additional styling for DTC ROI result */
 #dtc-roi-result {
     margin-top: 20px;
     text-align: center;
-    font-size: 24px; /* Larger font size */
-    font-weight: bold; /* Bold font */
-    color: #333; /* Optional: Darker color */
+    font-size: 24px; /* Larger font size for DTC ROI result */
+    font-weight: bold;
+    color: #333;
 }

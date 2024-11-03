@@ -1,20 +1,13 @@
-// Predefined values from the DTC Matrix sheet
-const MANAGEMENT_COST_PER_LOCATION = 12000;
-const ADVERTISING_COST_PER_LOCATION = 17200;
-
-// Conversion ratios
+// Conversion ratios and constants for calculations
 const LEADS_TO_CONSULTS = 60 / 156;
 const CONSULTS_TO_STARTS = 36 / 60;
 const STARTS_TO_LEADS_RATE = 156 / 400;
-
-// New constants
 const EOB_PAYOUT = 86;  // EOB Payout constant
 const FREQUENCY = 2;    // Frequency constant
 
-// Updated getLocationCount function
 function getLocationCount(starts) {
     if (starts < 1) {
-        return 0;
+        return 1;
     } else if (starts >= 1 && starts < 700) {
         return 1;
     } else if (starts >= 700 && starts < 1200) {
@@ -24,12 +17,20 @@ function getLocationCount(starts) {
     }
 }
 
-function updateCosts(locationCount) {
-    const managementCost = locationCount * MANAGEMENT_COST_PER_LOCATION;
-    const advertisingCost = locationCount * ADVERTISING_COST_PER_LOCATION;
+// Update Locations slider (read-only) and display
+function updateLocationCountSlider(locationCount) {
+    const locationSlider = document.getElementById('locationCount-slider');
+    locationSlider.value = locationCount;
+    document.getElementById('locationCount').textContent = locationCount;
+}
 
-    document.getElementById('managementCost').textContent = managementCost.toLocaleString();
-    document.getElementById('advertisingCost').textContent = advertisingCost.toLocaleString();
+function updateCosts() {
+    const managementCost = parseFloat(document.getElementById('managementCost-slider').value) || 12000;
+    const advertisingCost = parseFloat(document.getElementById('advertisingCost-slider').value) || 17200;
+
+    // Update the displayed values next to the sliders
+    document.getElementById('managementCost-value').textContent = managementCost.toLocaleString();
+    document.getElementById('advertisingCost-value').textContent = advertisingCost.toLocaleString();
 
     return { managementCost, advertisingCost };
 }
@@ -67,38 +68,9 @@ function calculateDTCRevenue(starts, treatmentFee) {
     return dtcRevenue;
 }
 
-function calculatePracticeRevenue(starts, treatmentFee) {
-    const practiceRevenue = starts * treatmentFee;
-
-    document.getElementById('practiceRevenue').textContent = practiceRevenue.toLocaleString();
-
-    return practiceRevenue;
-}
-
-function calculateTotalStarts(practiceStarts, dtcStarts) {
-    const totalStarts = practiceStarts + dtcStarts;
-
-    document.getElementById('totalStarts').textContent = totalStarts;
-
-    // Calculate and display Dental Insurance Bonus
-    calculateDentalInsuranceBonus(totalStarts);
-
-    return totalStarts;
-}
-
-function calculateTotalRevenue(practiceRevenue, dtcRevenue) {
-    const totalRevenue = practiceRevenue + dtcRevenue;
-
-    document.getElementById('totalRevenue').textContent = totalRevenue.toLocaleString();
-
-    return totalRevenue;
-}
-
 function calculateDentalInsuranceBonus(totalStarts) {
     const dentalInsuranceBonus = totalStarts * FREQUENCY * EOB_PAYOUT;
-
     document.getElementById('dentalInsuranceBonus').textContent = dentalInsuranceBonus.toLocaleString();
-
     return dentalInsuranceBonus;
 }
 
@@ -111,75 +83,30 @@ function calculateDTCROI(dtcRevenue, managementCost, advertisingCost) {
     return dtcROI;
 }
 
-// Initialize default values based on initial slider settings
-function initializeValues() {
-    const startsValue = parseFloat(document.getElementById('starts').value);
-    const treatmentFeeValue = parseFloat(document.getElementById('treatmentFee').value);
+// Function to initialize and update all values
+function updateAllValues() {
+    const startsValue = parseFloat(document.getElementById('starts').value) || 100;
+    const treatmentFeeValue = parseFloat(document.getElementById('treatmentFee').value) || 6500;
 
     document.getElementById('starts-value').textContent = startsValue;
     document.getElementById('treatmentFee-value').textContent = treatmentFeeValue;
 
-    const practiceRevenue = calculatePracticeRevenue(startsValue, treatmentFeeValue);
-    const dtcStarts = calculateDTCStarts(startsValue);
-    calculateTotalStarts(startsValue, dtcStarts);
     const dtcRevenue = calculateDTCRevenue(startsValue, treatmentFeeValue);
-    calculateTotalRevenue(practiceRevenue, dtcRevenue);
+    const dtcStarts = calculateDTCStarts(startsValue);
+    calculateDentalInsuranceBonus(dtcStarts);
 
     const locationCount = getLocationCount(startsValue);
-    document.getElementById('locationCount').textContent = locationCount;
+    updateLocationCountSlider(locationCount);
 
-    const { managementCost, advertisingCost } = updateCosts(locationCount);
+    const { managementCost, advertisingCost } = updateCosts();
     calculateDTCROI(dtcRevenue, managementCost, advertisingCost);
 }
 
-// Run the initializeValues function on page load
-window.addEventListener('DOMContentLoaded', initializeValues);
+// Run the updateAllValues function on page load
+window.addEventListener('DOMContentLoaded', updateAllValues);
 
-document.getElementById('starts').addEventListener('input', function () {
-    const startsValue = parseFloat(this.value);
-    document.getElementById('starts-value').textContent = startsValue;
-
-    const practiceRevenue = calculatePracticeRevenue(startsValue, parseFloat(document.getElementById('treatmentFee').value));
-    const dtcStarts = calculateDTCStarts(startsValue);
-    calculateTotalStarts(startsValue, dtcStarts);
-    const dtcRevenue = calculateDTCRevenue(startsValue, parseFloat(document.getElementById('treatmentFee').value));
-    calculateTotalRevenue(practiceRevenue, dtcRevenue);
-});
-
-document.getElementById('treatmentFee').addEventListener('input', function () {
-    const treatmentFeeValue = parseFloat(this.value);
-    document.getElementById('treatmentFee-value').textContent = treatmentFeeValue;
-
-    const startsValue = parseFloat(document.getElementById('starts').value);
-    const practiceRevenue = calculatePracticeRevenue(startsValue, treatmentFeeValue);
-    const dtcStarts = calculateDTCStarts(startsValue);
-    calculateTotalStarts(startsValue, dtcStarts);
-    const dtcRevenue = calculateDTCRevenue(startsValue, treatmentFeeValue);
-    calculateTotalRevenue(practiceRevenue, dtcRevenue);
-});
-
-document.getElementById('roi-form').addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    const starts = parseFloat(document.getElementById('starts').value);
-    const treatmentFee = parseFloat(document.getElementById('treatmentFee').value);
-
-    if (isNaN(starts) || isNaN(treatmentFee)) {
-        displayResult('Please enter valid numbers.');
-        return;
-    }
-
-    const locationCount = getLocationCount(starts);
-    document.getElementById('locationCount').textContent = locationCount;
-
-    const { managementCost, advertisingCost } = updateCosts(locationCount);
-
-    const dtcRevenue = calculateDTCRevenue(starts, treatmentFee);
-
-    calculateDTCROI(dtcRevenue, managementCost, advertisingCost);
-});
-
-function displayResult(message) {
-    const resultDiv = document.getElementById('result');
-    resultDiv.textContent = message;
-}
+// Add event listeners to each slider to trigger updates when adjusted
+document.getElementById('starts').addEventListener('input', updateAllValues);
+document.getElementById('treatmentFee').addEventListener('input', updateAllValues);
+document.getElementById('managementCost-slider').addEventListener('input', updateAllValues);
+document.getElementById('advertisingCost-slider').addEventListener('input', updateAllValues);

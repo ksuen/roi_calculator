@@ -1,65 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROI Calculator</title>
+    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orthodontic Practice Revenue Calculator</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>ROI Calculator</h1>
-        <form id="roi-form">
-            <div class="input-group">
-                <label for="starts">Practice Starts (#):</label>
-                <input type="range" id="starts" min="100" max="1200" step="100" value="100">
-                <span id="starts-value">100</span>
-            </div>
-            <div class="input-group">
-                <label for="treatmentFee">Treatment Fee ($):</label>
-                <input type="range" id="treatmentFee" min="5000" max="9000" step="100" value="6500">
-                <span id="treatmentFee-value">6500</span>
-            </div>
-            <div id="location-output" class="output-group">
-                Locations: <span id="locationCount">N/A</span>
-            </div>
-            <div class="output-group">
-                Management Cost: $<span id="managementCost">0</span>
-            </div>
-            <div class="output-group">
-                Advertising Cost: $<span id="advertisingCost">0</span>
-            </div>
-            <div class="output-group">
-                DTC Leads: <span id="dtcLeads">0</span>
-            </div>
-            <div class="output-group">
-                DTC Consults: <span id="dtcConsults">0</span>
-            </div>
-            <div class="output-group">
-                DTC Starts: <span id="dtcStarts">0</span>
-            </div>
-            <div class="output-group">
-                Starts New Revenue: $<span id="dtcRevenue">0</span>
-            </div>
-            <div class="output-group">
-                Practice Revenue: $<span id="practiceRevenue">0</span>
-            </div>
-            <div class="output-group">
-                Total Starts: <span id="totalStarts">0</span>
-            </div>
-            <div class="output-group">
-                Total Revenue: $<span id="totalRevenue">0</span>
-            </div>
-            <div class="output-group">
-                Dental Insurance Bonus: $<span id="dentalInsuranceBonus">0</span>
-            </div>
-            <button type="submit">Calculate DTC ROI</button>
-        </form>
+        <h1>Orthodontic Practice Revenue Calculator</h1>
+        <h2>Direct-to-Consumer Patient Generator</h2>
+        <h3>Practice Profile</h3>
         
-        <!-- DTC ROI result moved below the button -->
-        <div id="dtc-roi-result">
-            DTC ROI: <span id="dtcROI">0%</span>
+        <!-- Doctor and Practice Name Inputs -->
+        <div class="input-group">
+            <label for="doctorName">Doctor's Name</label>
+            <input type="text" id="doctorName" name="doctorName" placeholder="Enter Doctor's Name">
         </div>
+        <div class="input-group">
+            <label for="practiceName">Practice Name</label>
+            <input type="text" id="practiceName" name="practiceName" placeholder="Enter Practice Name">
+        </div>
+
+        <form id="roi-form">
+            <!-- Input Table -->
+            <table>
+                <tr>
+                    <td><label for="starts">Practice Starts (#)</label></td>
+                    <td><input type="range" id="starts" min="100" max="1200" step="100" value="100"></td>
+                    <td><strong><span id="starts-value">100</span></strong></td>
+                </tr>
+                <tr>
+                    <td><label for="treatmentFee">Treatment Fee ($)</label></td>
+                    <td><input type="range" id="treatmentFee" min="5000" max="9000" step="100" value="6500"></td>
+                    <td><strong><span id="treatmentFee-value">6500</span></strong></td>
+                </tr>
+                <!-- Locations Slider (Read-Only) -->
+                <tr>
+                    <td><label for="locationCount-slider">Locations</label></td>
+                    <td><input type="range" id="locationCount-slider" min="1" max="3" step="1" value="1" disabled></td>
+                    <td><strong><span id="locationCount">1</span></strong></td>
+                </tr>
+            </table>
+
+            <!-- New Subheader for Campaign Investment -->
+            <h3>Campaign Investment</h3>
+
+            <table>
+                <tr>
+                    <td><label for="managementCost-slider">Management Fee (Monthly) ($)</label></td>
+                    <td><input type="range" id="managementCost-slider" min="7000" max="17000" step="100" value="12000"></td>
+                    <td><strong><span id="managementCost-value">12000</span></strong></td>
+                </tr>
+                <tr>
+                    <td><label for="advertisingCost-slider">Advertising (Monthly) ($)</label></td>
+                    <td><input type="range" id="advertisingCost-slider" min="12200" max="22200" step="100" value="17200"></td>
+                    <td><strong><span id="advertisingCost-value">17200</span></strong></td>
+                </tr>
+            </table>
+
+            <!-- New Subheader for Opportunity Section -->
+            <h3>Your Dental Pain Eraser Opportunity</h3>
+
+            <!-- Opportunity Output Table -->
+            <table class="output-table">
+                <tr>
+                    <td>Leads</td>
+                    <td><span id="dtcLeads">0</span></td>
+                </tr>
+                <tr>
+                    <td>Consults</td>
+                    <td><span id="dtcConsults">0</span></td>
+                </tr>
+                <tr>
+                    <td>Starts</td>
+                    <td><span id="dtcStarts">0</span></td>
+                </tr>
+                <tr>
+                    <td>Your Starts New Revenue</td>
+                    <td>$<span id="dtcRevenue">0</span></td>
+                </tr>
+            </table>
+
+            <!-- New Subheader for ROI Section -->
+            <h3>Your Return on Investment (ROI)</h3>
+
+            <!-- ROI and Bonus Display in Output Table -->
+            <table class="output-table">
+                <tr>
+                    <td>ROI</td>
+                    <td><span id="dtcROI">0%</span></td>
+                </tr>
+                <tr>
+                    <td>Dental Insurance Bonus</td>
+                    <td>$<span id="dentalInsuranceBonus">0</span></td>
+                </tr>
+            </table>
+        </form>
     </div>
 
     <script src="script.js"></script>
