@@ -12,11 +12,13 @@
         <form id="roi-form">
             <div class="input-group">
                 <label for="starts">Practice Starts (#):</label>
-                <input type="number" id="starts" min="1" required>
+                <input type="range" id="starts" min="100" max="1200" step="100" value="100">
+                <span id="starts-value">100</span>
             </div>
             <div class="input-group">
                 <label for="treatmentFee">Treatment Fee ($):</label>
-                <input type="number" id="treatmentFee" min="1" required>
+                <input type="range" id="treatmentFee" min="5000" max="9000" step="100" value="6500">
+                <span id="treatmentFee-value">6500</span>
             </div>
             <div id="location-output" class="output-group">
                 Locations: <span id="locationCount">N/A</span>
@@ -27,7 +29,34 @@
             <div class="output-group">
                 Advertising Cost: $<span id="advertisingCost">0</span>
             </div>
-            <button type="submit">Calculate ROI</button>
+            <div class="output-group">
+                DTC Leads: <span id="dtcLeads">0</span>
+            </div>
+            <div class="output-group">
+                DTC Consults: <span id="dtcConsults">0</span>
+            </div>
+            <div class="output-group">
+                DTC Starts: <span id="dtcStarts">0</span>
+            </div>
+            <div class="output-group">
+                Starts New Revenue: $<span id="dtcRevenue">0</span>
+            </div>
+            <div class="output-group">
+                Practice Revenue: $<span id="practiceRevenue">0</span>
+            </div>
+            <div class="output-group">
+                Total Starts: <span id="totalStarts">0</span>
+            </div>
+            <div class="output-group">
+                Total Revenue: $<span id="totalRevenue">0</span>
+            </div>
+            <div class="output-group">
+                Dental Insurance Bonus: $<span id="dentalInsuranceBonus">0</span> <!-- New Dental Insurance Bonus display -->
+            </div>
+            <div class="output-group">
+                DTC ROI: <span id="dtcROI">0%</span>
+            </div>
+            <button type="submit">Calculate DTC ROI</button>
         </form>
         <div id="result"></div>
     </div>

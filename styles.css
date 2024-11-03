@@ -63,3 +63,15 @@ button:hover {
     font-size: 18px;
     font-weight: bold;
 }
+
+/* Styling tweaks for sliders and display */
+input[type="range"] {
+    width: 100%;
+    margin: 10px 0;
+}
+
+#starts-value,
+#treatmentFee-value {
+    font-weight: bold;
+    margin-left: 10px;
+}
