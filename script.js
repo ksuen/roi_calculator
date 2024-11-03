@@ -110,3 +110,63 @@ document.getElementById('starts').addEventListener('input', updateAllValues);
 document.getElementById('treatmentFee').addEventListener('input', updateAllValues);
 document.getElementById('managementCost-slider').addEventListener('input', updateAllValues);
 document.getElementById('advertisingCost-slider').addEventListener('input', updateAllValues);
+
+function sendEmailSummary() {
+    const doctorName = document.getElementById('doctorName').value;
+    const practiceName = document.getElementById('practiceName').value;
+    const starts = document.getElementById('starts-value').textContent;
+    const treatmentFee = document.getElementById('treatmentFee-value').textContent;
+    const locationCount = document.getElementById('locationCount').textContent;
+    const managementCost = document.getElementById('managementCost-value').textContent;
+    const advertisingCost = document.getElementById('advertisingCost-value').textContent;
+    const dtcLeads = document.getElementById('dtcLeads').textContent;
+    const dtcConsults = document.getElementById('dtcConsults').textContent;
+    const dtcStarts = document.getElementById('dtcStarts').textContent;
+    const dtcRevenue = document.getElementById('dtcRevenue').textContent;
+    const dtcROI = document.getElementById('dtcROI').textContent;
+    const dentalInsuranceBonus = document.getElementById('dentalInsuranceBonus').textContent;
+    const userEmail = document.getElementById('email').value;
+
+    const emailContent = `
+        Doctor's Name: ${doctorName}
+        Practice Name: ${practiceName}
+        Practice Starts: ${starts}
+        Treatment Fee: $${treatmentFee}
+        Locations: ${locationCount}
+        Management Fee (Monthly): $${managementCost}
+        Advertising (Monthly): $${advertisingCost}
+        
+        Your Dental Pain Eraser Opportunity:
+        - Leads: ${dtcLeads}
+        - Consults: ${dtcConsults}
+        - Starts: ${dtcStarts}
+        - Your Starts New Revenue: $${dtcRevenue}
+        
+        Your Return on Investment (ROI):
+        - ROI: ${dtcROI}
+        - Dental Insurance Bonus: $${dentalInsuranceBonus}
+    `;
+
+    // Backend call to send email (requires server-side setup)
+    // For example, using fetch to post data to a backend service
+    fetch('/send-email', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            to: userEmail,
+            cc: 'your-email@example.com', // replace with your own email address
+            subject: 'Orthodontic Practice Revenue Summary',
+            text: emailContent,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Email sent successfully!');
+    })
+    .catch(error => {
+        alert('Failed to send email.');
+        console.error('Error:', error);
+    });
+}
