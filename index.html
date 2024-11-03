@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orthodontic Practice Revenue Calculator</title>
+    <title>Dental Pain Eraser</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,10 +12,11 @@
         <h2>Direct-to-Consumer Patient Generator</h2>
         <h3>Practice Profile</h3>
 
-        <div class="input-group">
-            <label for="doctorName">Doctor's Name</label>
-            <input type="text" id="doctorName" name="doctorName" placeholder="Enter Doctor's Name">
-        </div>
+		<div class="input-group">
+			<label for="doctorName">Doctor's Name <span class="required-asterisk">*</span></label>
+			<input type="text" id="doctorName" name="doctorName" placeholder="Enter Doctor's Name" required>
+		</div>
+
         <div class="input-group">
             <label for="practiceName">Practice Name</label>
             <input type="text" id="practiceName" name="practiceName" placeholder="Enter Practice Name">
@@ -72,10 +73,10 @@
         <h3>Email Your ROI Opportunity</h3>
         <form id="email-form">
             <table class="output-table">
-                <tr>
-                    <td><label for="email">Your Email</label></td>
-                    <td><input type="email" id="email" name="email" required placeholder="Enter your email"></td>
-                </tr>
+				<div class="input-group">
+					<label for="email">Your Email <span class="required-asterisk">*</span></label>
+					<input type="email" id="email" name="email" required placeholder="Enter your email">
+				</div>
             </table>
             <button type="button" onclick="sendEmailSummary()">Send ROI Summary</button>
         </form>

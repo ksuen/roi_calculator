@@ -100,6 +100,13 @@ document.getElementById('advertisingCost-slider').addEventListener('input', upda
 // Function to send email summary
 function sendEmailSummary() {
     const doctorName = document.getElementById('doctorName').value;
+    const userEmail = document.getElementById('email').value;
+
+    if (!doctorName || !userEmail) {
+        alert("Please fill in both the Doctor's Name and Email fields.");
+        return; // Stop the function if either field is empty
+    }
+
     const practiceName = document.getElementById('practiceName').value;
     const starts = document.getElementById('starts-value').textContent;
     const treatmentFee = document.getElementById('treatmentFee-value').textContent;
@@ -112,7 +119,6 @@ function sendEmailSummary() {
     const dtcRevenue = document.getElementById('dtcRevenue').textContent;
     const dtcROI = document.getElementById('dtcROI').textContent;
     const dentalInsuranceBonus = document.getElementById('dentalInsuranceBonus').textContent;
-    const userEmail = document.getElementById('email').value;
 
     const emailContent = `
         Doctor's Name: ${doctorName}
