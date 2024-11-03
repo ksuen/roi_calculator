@@ -1,16 +1,16 @@
-// Conversion ratios and constants for calculations
+// Constants for calculations
 const LEADS_TO_CONSULTS = 60 / 156;
 const CONSULTS_TO_STARTS = 36 / 60;
 const STARTS_TO_LEADS_RATE = 156 / 400;
-const EOB_PAYOUT = 86;  // EOB Payout constant
-const FREQUENCY = 2;    // Frequency constant
+const EOB_PAYOUT = 86;
+const FREQUENCY = 2;
 
 // Determine location count based on starts
 function getLocationCount(starts) {
     return starts < 700 ? 1 : starts < 1200 ? 2 : 3;
 }
 
-// Update the Location Count slider and display
+// Update Location Count display
 function updateLocationCountSlider(locationCount) {
     document.getElementById('locationCount-slider').value = locationCount;
     document.getElementById('locationCount').textContent = locationCount;
@@ -18,8 +18,8 @@ function updateLocationCountSlider(locationCount) {
 
 // Retrieve and update management and advertising costs
 function updateCosts() {
-    const managementCost = parseFloat(document.getElementById('managementCost-slider').value) || 12000;
-    const advertisingCost = parseFloat(document.getElementById('advertisingCost-slider').value) || 17200;
+    const managementCost = parseFloat(document.getElementById('managementCost-slider').value);
+    const advertisingCost = parseFloat(document.getElementById('advertisingCost-slider').value);
 
     document.getElementById('managementCost-value').textContent = managementCost.toLocaleString();
     document.getElementById('advertisingCost-value').textContent = advertisingCost.toLocaleString();
@@ -31,9 +31,8 @@ function updateCosts() {
 function calculateDTCLeads(starts) {
     let dtcLeads = starts * STARTS_TO_LEADS_RATE;
     dtcLeads = starts === 100 ? dtcLeads * 1.5 : dtcLeads;
-    dtcLeads = Math.ceil(dtcLeads);
-    document.getElementById('dtcLeads').textContent = dtcLeads;
-    return dtcLeads;
+    document.getElementById('dtcLeads').textContent = Math.ceil(dtcLeads);
+    return Math.ceil(dtcLeads);
 }
 
 // Calculate consults and starts based on leads
@@ -56,56 +55,61 @@ function calculateDTCRevenue(starts, treatmentFee) {
     return dtcRevenue;
 }
 
-// Calculate dental insurance bonus
-function calculateDentalInsuranceBonus(totalStarts) {
+// Calculate dental insurance bonus using total starts (practice + DTC starts)
+function calculateDentalInsuranceBonus(practiceStarts, dtcStarts) {
+    const totalStarts = practiceStarts + dtcStarts;
     const bonus = totalStarts * FREQUENCY * EOB_PAYOUT;
     document.getElementById('dentalInsuranceBonus').textContent = bonus.toLocaleString();
     return bonus;
 }
 
+// No changes needed in the calculateDTCROI function since it now receives adjusted costs
 // Calculate ROI
 function calculateDTCROI(dtcRevenue, managementCost, advertisingCost) {
-    const totalCost = managementCost + advertisingCost;
-    const dtcROI = Math.ceil(((dtcRevenue - totalCost) / totalCost) * 100);
+    const totalCost = (managementCost + advertisingCost) * 12;
+    const dtcROI = Math.ceil(((dtcRevenue / totalCost) - 1) * 100);
     document.getElementById('dtcROI').textContent = `${dtcROI}%`;
     return dtcROI;
 }
 
-// Function to update all calculated values
 function updateAllValues() {
-    const startsValue = parseFloat(document.getElementById('starts').value) || 100;
-    const treatmentFeeValue = parseFloat(document.getElementById('treatmentFee').value) || 6500;
+    const practiceStarts = parseFloat(document.getElementById('starts').value);
+    const treatmentFeeValue = parseFloat(document.getElementById('treatmentFee').value);
 
-    document.getElementById('starts-value').textContent = startsValue;
+    document.getElementById('starts-value').textContent = practiceStarts;
     document.getElementById('treatmentFee-value').textContent = treatmentFeeValue;
 
-    const dtcRevenue = calculateDTCRevenue(startsValue, treatmentFeeValue);
-    const dtcStarts = calculateDTCStarts(startsValue);
-    calculateDentalInsuranceBonus(dtcStarts);
+    const dtcRevenue = calculateDTCRevenue(practiceStarts, treatmentFeeValue);
+    const dtcStarts = calculateDTCStarts(practiceStarts);
 
-    const locationCount = getLocationCount(startsValue);
+    // Calculate bonus using the total starts (practice + DTC)
+    calculateDentalInsuranceBonus(practiceStarts, dtcStarts);
+
+    const locationCount = getLocationCount(practiceStarts);
     updateLocationCountSlider(locationCount);
 
     const { managementCost, advertisingCost } = updateCosts();
-    calculateDTCROI(dtcRevenue, managementCost, advertisingCost);
+    const adjustedManagementCost = managementCost * locationCount;
+    const adjustedAdvertisingCost = advertisingCost * locationCount;
+
+    calculateDTCROI(dtcRevenue, adjustedManagementCost, adjustedAdvertisingCost);
 }
 
-// Run updateAllValues on page load and on slider input changes
 window.addEventListener('DOMContentLoaded', updateAllValues);
 document.getElementById('starts').addEventListener('input', updateAllValues);
 document.getElementById('treatmentFee').addEventListener('input', updateAllValues);
-document.getElementById('managementCost-slider').addEventListener('input', updateAllValues);
-document.getElementById('advertisingCost-slider').addEventListener('input', updateAllValues);
+//document.getElementById('managementCost-slider').addEventListener('input', updateAllValues);
+//document.getElementById('advertisingCost-slider').addEventListener('input', updateAllValues);
 
-// Function to send email summary
 function sendEmailSummary() {
     const doctorName = document.getElementById('doctorName').value;
     const userEmail = document.getElementById('email').value;
 
     if (!doctorName || !userEmail) {
         alert("Please fill in both the Doctor's Name and Email fields.");
-        return; // Stop the function if either field is empty
+        return;
     }
+
 
     const practiceName = document.getElementById('practiceName').value;
     const starts = document.getElementById('starts-value').textContent;
@@ -142,27 +146,13 @@ function sendEmailSummary() {
 
     fetch('/send-email', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            to: userEmail,
-            cc: 'your-email@example.com', // replace with your own email address
-            subject: 'Orthodontic Practice Revenue Summary',
-            text: emailContent,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ to: userEmail, subject: 'Revenue Summary', text: emailContent }),
     })
     .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to send email');
-        }
+        if (!response.ok) throw new Error('Failed to send email');
         return response.json();
     })
-    .then(() => {
-        alert('Email sent successfully!');
-    })
-    .catch(error => {
-        alert('Failed to send email. Please try again.');
-        console.error('Error:', error);
-    });
+    .then(() => alert('Email sent successfully!'))
+    .catch(error => console.error('Email send error:', error));
 }

@@ -157,6 +157,7 @@ button:active {
     transform: scale(0.98);
 }
 
+/* Output result styling */
 #dtc-roi-result {
     margin-top: 20px;
     text-align: center;

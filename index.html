@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dental Pain Eraser</title>
+    <title>Dental Pain Eraser - Revenue Calculator</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,10 +12,10 @@
         <h2>Direct-to-Consumer Patient Generator</h2>
         <h3>Practice Profile</h3>
 
-		<div class="input-group">
-			<label for="doctorName">Doctor's Name <span class="required-asterisk">*</span></label>
-			<input type="text" id="doctorName" name="doctorName" placeholder="Enter Doctor's Name" required>
-		</div>
+        <div class="input-group">
+            <label for="doctorName">Doctor's Name <span class="required-asterisk">*</span></label>
+            <input type="text" id="doctorName" name="doctorName" placeholder="Enter Doctor's Name" required>
+        </div>
 
         <div class="input-group">
             <label for="practiceName">Practice Name</label>
@@ -43,16 +43,16 @@
 
             <h3>Campaign Investment</h3>
             <table>
-                <tr>
-                    <td><label for="managementCost-slider">Management Fee (Monthly)</label></td>
-                    <td><input type="range" id="managementCost-slider" min="7000" max="17000" step="100" value="12000"></td>
-                    <td><strong>$<span id="managementCost-value">12000</span></strong></td>
-                </tr>
-                <tr>
-                    <td><label for="advertisingCost-slider">Advertising (Monthly)</label></td>
-                    <td><input type="range" id="advertisingCost-slider" min="12200" max="22200" step="100" value="17200"></td>
-                    <td><strong>$<span id="advertisingCost-value">17200</span></strong></td>
-                </tr>
+				<tr>
+					<td><label for="managementCost-slider">Management Fee (Monthly)</label></td>
+					<td><input type="range" id="managementCost-slider" min="750" max="1250" step="50" value="1000" disabled></td>
+					<td><strong>$<span id="managementCost-value">1000</span></strong></td>
+				</tr>
+				<tr>
+					<td><label for="advertisingCost-slider">Advertising (Monthly)</label></td>
+					<td><input type="range" id="advertisingCost-slider" min="900" max="2000" step="50" value="1433" disabled></td>
+					<td><strong>$<span id="advertisingCost-value">1433</span></strong></td>
+				</tr>
             </table>
 
             <h3>Your Dental Pain Eraser Opportunity</h3>
@@ -60,7 +60,7 @@
                 <tr><td>Leads</td><td><span id="dtcLeads">0</span></td></tr>
                 <tr><td>Consults</td><td><span id="dtcConsults">0</span></td></tr>
                 <tr><td>Starts</td><td><span id="dtcStarts">0</span></td></tr>
-                <tr><td>Your Starts New Revenue</td><td>$<span id="dtcRevenue">0</span></td></tr>
+                <tr><td>New Revenue from Starts</td><td>$<span id="dtcRevenue">0</span></td></tr>
             </table>
 
             <h3>Your Return on Investment (ROI)</h3>
@@ -72,12 +72,10 @@
 
         <h3>Email Your ROI Opportunity</h3>
         <form id="email-form">
-            <table class="output-table">
-				<div class="input-group">
-					<label for="email">Your Email <span class="required-asterisk">*</span></label>
-					<input type="email" id="email" name="email" required placeholder="Enter your email">
-				</div>
-            </table>
+            <div class="input-group">
+                <label for="email">Your Email <span class="required-asterisk">*</span></label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
             <button type="button" onclick="sendEmailSummary()">Send ROI Summary</button>
         </form>
     </div>
