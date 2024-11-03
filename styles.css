@@ -75,3 +75,12 @@ input[type="range"] {
     font-weight: bold;
     margin-left: 10px;
 }
+
+/* Additional styling for DTC ROI result */
+#dtc-roi-result {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 24px; /* Larger font size */
+    font-weight: bold; /* Bold font */
+    color: #333; /* Optional: Darker color */
+}

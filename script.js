@@ -11,12 +11,13 @@ const STARTS_TO_LEADS_RATE = 156 / 400;
 const EOB_PAYOUT = 86;  // EOB Payout constant
 const FREQUENCY = 2;    // Frequency constant
 
+// Updated getLocationCount function
 function getLocationCount(starts) {
     if (starts < 1) {
         return 0;
     } else if (starts >= 1 && starts < 700) {
         return 1;
-    } else if (starts >= 700 && starts < 1100) {
+    } else if (starts >= 700 && starts < 1200) {
         return 2;
     } else {
         return 3;
@@ -109,6 +110,30 @@ function calculateDTCROI(dtcRevenue, managementCost, advertisingCost) {
 
     return dtcROI;
 }
+
+// Initialize default values based on initial slider settings
+function initializeValues() {
+    const startsValue = parseFloat(document.getElementById('starts').value);
+    const treatmentFeeValue = parseFloat(document.getElementById('treatmentFee').value);
+
+    document.getElementById('starts-value').textContent = startsValue;
+    document.getElementById('treatmentFee-value').textContent = treatmentFeeValue;
+
+    const practiceRevenue = calculatePracticeRevenue(startsValue, treatmentFeeValue);
+    const dtcStarts = calculateDTCStarts(startsValue);
+    calculateTotalStarts(startsValue, dtcStarts);
+    const dtcRevenue = calculateDTCRevenue(startsValue, treatmentFeeValue);
+    calculateTotalRevenue(practiceRevenue, dtcRevenue);
+
+    const locationCount = getLocationCount(startsValue);
+    document.getElementById('locationCount').textContent = locationCount;
+
+    const { managementCost, advertisingCost } = updateCosts(locationCount);
+    calculateDTCROI(dtcRevenue, managementCost, advertisingCost);
+}
+
+// Run the initializeValues function on page load
+window.addEventListener('DOMContentLoaded', initializeValues);
 
 document.getElementById('starts').addEventListener('input', function () {
     const startsValue = parseFloat(this.value);
