@@ -53,6 +53,7 @@ function updateAllValues() {
     const practiceStarts = parseFloat(document.getElementById('starts').value);
     const treatmentFeeValue = parseFloat(document.getElementById('treatmentFee').value);
     const locationCount = getLocationCount(practiceStarts);
+    const practiceLocationCount = parseFloat(document.getElementById('practiceLocationCount-slider').value);
 
     const dtcLeads = calculateDTCLeads(practiceStarts);
     const dtcConsults = calculateDTCConsults(dtcLeads);
@@ -62,13 +63,12 @@ function updateAllValues() {
 
     document.getElementById('starts-value').textContent = practiceStarts;
     document.getElementById('treatmentFee-value').textContent = treatmentFeeValue.toLocaleString();
+    document.getElementById('practiceLocationCount').textContent = practiceLocationCount;
     document.getElementById('dtcLeads').textContent = dtcLeads;
     document.getElementById('dtcConsults').textContent = dtcConsults;
     document.getElementById('dtcStarts').textContent = dtcStarts;
     document.getElementById('dtcRevenue').textContent = dtcRevenue.toLocaleString();
     document.getElementById('dentalInsuranceBonus').textContent = dentalBonus.toLocaleString();
-    document.getElementById('locationCount').textContent = locationCount;
-    document.getElementById('locationCount-slider').value = locationCount;
 
     const adjustedManagementCost = MANAGEMENT_COST * locationCount;
     const adjustedAdvertisingCost = ADVERTISING_COST * locationCount;
@@ -101,7 +101,7 @@ function sendEmailSummary() {
 
 // Generate the content for the email
 function createEmailContent() {
-    const fields = ['doctorName', 'practiceName', 'starts', 'treatmentFee', 'locationCount', 'managementCost', 'advertisingCost', 'dtcLeads', 'dtcConsults', 'dtcStarts', 'dtcRevenue', 'dtcROI', 'dentalInsuranceBonus'];
+    const fields = ['doctorName', 'practiceName', 'starts', 'treatmentFee', 'practiceLocationCount', 'managementCost', 'advertisingCost', 'dtcLeads', 'dtcConsults', 'dtcStarts', 'dtcRevenue', 'dtcROI', 'dentalInsuranceBonus'];
     return fields.map(id => `${id}: ${document.getElementById(id).textContent}`).join('\n');
 }
 
@@ -109,3 +109,4 @@ function createEmailContent() {
 window.addEventListener('DOMContentLoaded', updateAllValues);
 document.getElementById('starts').addEventListener('input', updateAllValues);
 document.getElementById('treatmentFee').addEventListener('input', updateAllValues);
+document.getElementById('practiceLocationCount-slider').addEventListener('input', updateAllValues);
