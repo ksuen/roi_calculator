@@ -101,7 +101,7 @@ function sendEmailSummary() {
 
 // Generate the content for the email
 function createEmailContent() {
-    const fields = ['doctorName', 'practiceName', 'starts', 'treatmentFee', 'practiceLocationCount', 'managementCost', 'advertisingCost', 'dtcLeads', 'dtcConsults', 'dtcStarts', 'dtcRevenue', 'dtcROI', 'dentalInsuranceBonus'];
+    const fields = ['email', 'doctorName', 'practiceName', 'starts', 'treatmentFee', 'practiceLocationCount', 'managementCost', 'advertisingCost', 'dtcLeads', 'dtcConsults', 'dtcStarts', 'dtcRevenue', 'dtcROI', 'dentalInsuranceBonus'];
     return fields.map(id => `${id}: ${document.getElementById(id).textContent}`).join('\n');
 }
 
