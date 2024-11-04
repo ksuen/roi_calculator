@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,16 +12,16 @@
         <h2>Direct-to-Consumer Patient Generator</h2>
         <h3>Practice Profile</h3>
 
+        <!-- Input fields for user information -->
         <div class="input-group">
             <label for="doctorName">Doctor's Name <span class="required-asterisk">*</span></label>
             <input type="text" id="doctorName" name="doctorName" placeholder="Enter Doctor's Name" required>
         </div>
 
         <div class="input-group">
-            <label for="practiceName">Practice Name</label>
-            <input type="text" id="practiceName" name="practiceName" placeholder="Enter Practice Name">
+            <label for="practiceName">Practice Name <span class="required-asterisk">*</span></label>
+            <input type="text" id="practiceName" name="practiceName" placeholder="Enter Practice Name" required>
         </div>
-
         <form id="roi-form">
             <table>
                 <tr>
@@ -70,7 +69,7 @@
                 <tr><td>Dental Insurance Bonus</td><td>$<span id="dentalInsuranceBonus">0</span></td></tr>
             </table>
         </form>
-		
+		        <!-- Form for sending ROI summary by email -->
         <h3>Email Your ROI Opportunity</h3>
         <form id="email-form">
             <div class="input-group">
