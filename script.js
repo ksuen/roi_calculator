@@ -6,106 +6,83 @@ const EOB_PAYOUT = 86;
 const FREQUENCY = 2;
 const MANAGEMENT_COST = 12000;
 const ADVERTISING_COST = 17200;
-
-// Email format validation regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Determine location count based on starts
+// Function to determine location count based on starts
 function getLocationCount(starts) {
     return starts < 700 ? 1 : starts < 1200 ? 2 : 3;
 }
 
-// Update Location Count display
-function updateLocationCountSlider(locationCount) {
-    document.getElementById('locationCount-slider').value = locationCount;
-    document.getElementById('locationCount').textContent = locationCount;
-}
-
-// Calculate leads from starts
+// Calculate the number of leads based on practice starts
 function calculateDTCLeads(starts) {
     let dtcLeads = starts * STARTS_TO_LEADS_RATE;
     if (starts === 100) dtcLeads *= 1.5;
-    document.getElementById('dtcLeads').textContent = Math.ceil(dtcLeads);
     return Math.ceil(dtcLeads);
 }
 
-// Calculate consults and starts based on leads
+// Calculate the number of consults based on leads
+function calculateDTCConsults(leads) {
+    return Math.ceil(leads * LEADS_TO_CONSULTS);
+}
+
+// Calculate the number of starts based on consults
 function calculateDTCStarts(starts) {
     const leads = calculateDTCLeads(starts);
-    const consults = Math.ceil(leads * LEADS_TO_CONSULTS);
-    document.getElementById('dtcConsults').textContent = consults;
-
-    const dtcStarts = Math.ceil(consults * CONSULTS_TO_STARTS);
-    document.getElementById('dtcStarts').textContent = dtcStarts;
-
-    return dtcStarts;
+    const consults = calculateDTCConsults(leads);
+    return Math.ceil(consults * CONSULTS_TO_STARTS);
 }
 
-// Calculate revenue based on starts and treatment fee
+// Calculate the revenue from starts and treatment fee
 function calculateDTCRevenue(starts, treatmentFee) {
-    const dtcStarts = calculateDTCStarts(starts);
-    const dtcRevenue = dtcStarts * treatmentFee;
-    document.getElementById('dtcRevenue').textContent = dtcRevenue.toLocaleString();
-    return dtcRevenue;
+    return calculateDTCStarts(starts) * treatmentFee;
 }
 
-// Calculate dental insurance bonus using total starts
+// Calculate the dental insurance bonus based on starts
 function calculateDentalInsuranceBonus(practiceStarts, dtcStarts) {
-    const totalStarts = practiceStarts + dtcStarts;
-    const bonus = totalStarts * FREQUENCY * EOB_PAYOUT;
-    document.getElementById('dentalInsuranceBonus').textContent = bonus.toLocaleString();
-    return bonus;
+    return (practiceStarts + dtcStarts) * FREQUENCY * EOB_PAYOUT;
 }
 
-// Calculate ROI including practice and DTC revenue
+// Calculate the Return on Investment (ROI)
 function calculateDTCROI(dtcRevenue, managementCost, advertisingCost) {
     const totalCost = managementCost + advertisingCost;
-    const dtcROI = Math.ceil(((dtcRevenue - totalCost) / totalCost) * 100);
-    document.getElementById('dtcROI').textContent = `${dtcROI}%`;
-    return dtcROI;
+    return Math.ceil(((dtcRevenue - totalCost) / totalCost) * 100);
 }
 
-// Update all calculated values
+// Update all calculated values and display them in the HTML
 function updateAllValues() {
     const practiceStarts = parseFloat(document.getElementById('starts').value);
     const treatmentFeeValue = parseFloat(document.getElementById('treatmentFee').value);
+    const locationCount = getLocationCount(practiceStarts);
+
+    const dtcLeads = calculateDTCLeads(practiceStarts);
+    const dtcConsults = calculateDTCConsults(dtcLeads);
+    const dtcStarts = calculateDTCStarts(practiceStarts);
+    const dtcRevenue = calculateDTCRevenue(practiceStarts, treatmentFeeValue);
+    const dentalBonus = calculateDentalInsuranceBonus(practiceStarts, dtcStarts);
 
     document.getElementById('starts-value').textContent = practiceStarts;
-    document.getElementById('treatmentFee-value').textContent = treatmentFeeValue;
-
-    const dtcRevenue = calculateDTCRevenue(practiceStarts, treatmentFeeValue);
-    const dtcStarts = calculateDTCStarts(practiceStarts);
-
-    calculateDentalInsuranceBonus(practiceStarts, dtcStarts);
-
-    const locationCount = getLocationCount(practiceStarts);
-    updateLocationCountSlider(locationCount);
+    document.getElementById('treatmentFee-value').textContent = treatmentFeeValue.toLocaleString();
+    document.getElementById('dtcLeads').textContent = dtcLeads;
+    document.getElementById('dtcConsults').textContent = dtcConsults;
+    document.getElementById('dtcStarts').textContent = dtcStarts;
+    document.getElementById('dtcRevenue').textContent = dtcRevenue.toLocaleString();
+    document.getElementById('dentalInsuranceBonus').textContent = dentalBonus.toLocaleString();
+    document.getElementById('locationCount').textContent = locationCount;
+    document.getElementById('locationCount-slider').value = locationCount;
 
     const adjustedManagementCost = MANAGEMENT_COST * locationCount;
     const adjustedAdvertisingCost = ADVERTISING_COST * locationCount;
-
-    calculateDTCROI(dtcRevenue, adjustedManagementCost, adjustedAdvertisingCost);
+    document.getElementById('dtcROI').textContent = `${calculateDTCROI(dtcRevenue, adjustedManagementCost, adjustedAdvertisingCost)}%`;
 }
 
-// Event listeners
-window.addEventListener('DOMContentLoaded', updateAllValues);
-document.getElementById('starts').addEventListener('input', updateAllValues);
-document.getElementById('treatmentFee').addEventListener('input', updateAllValues);
-
-// Send email summary function
+// Validate the email format and send the email summary
 function sendEmailSummary() {
     const doctorName = document.getElementById('doctorName').value;
     const practiceName = document.getElementById('practiceName').value;
     const userEmail = document.getElementById('email').value;
 
-    if (!doctorName || !practiceName || !userEmail) {
-        alert("Please fill in the Doctor's Name, Practice Name, and Email fields.");
-        return;
-    }
-
-    // Validate email format
-    if (!EMAIL_REGEX.test(userEmail)) {
-        alert("Please enter a valid email address.");
+    if (!doctorName || !practiceName || !userEmail || !EMAIL_REGEX.test(userEmail)) {
+        alert("Please complete all required fields with a valid email.");
         return;
     }
 
@@ -115,13 +92,20 @@ function sendEmailSummary() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ to: userEmail, subject: 'Revenue Summary', text: emailContent }),
     })
-    .then(response => response.ok ? alert('Email sent successfully!') : Promise.reject('Failed to send email'))
+    .then(response => {
+        if (response.ok) alert('Email sent successfully!');
+        else throw new Error('Failed to send email');
+    })
     .catch(error => console.error('Email send error:', error));
 }
 
-// Create email content
+// Generate the content for the email
 function createEmailContent() {
     const fields = ['doctorName', 'practiceName', 'starts', 'treatmentFee', 'locationCount', 'managementCost', 'advertisingCost', 'dtcLeads', 'dtcConsults', 'dtcStarts', 'dtcRevenue', 'dtcROI', 'dentalInsuranceBonus'];
-    const content = fields.map(id => `${id}: ${document.getElementById(id).textContent}`).join('\n');
-    return content;
+    return fields.map(id => `${id}: ${document.getElementById(id).textContent}`).join('\n');
 }
+
+// Initialize event listeners for form inputs
+window.addEventListener('DOMContentLoaded', updateAllValues);
+document.getElementById('starts').addEventListener('input', updateAllValues);
+document.getElementById('treatmentFee').addEventListener('input', updateAllValues);

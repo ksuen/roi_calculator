@@ -7,50 +7,50 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <main class="container">
         <h1>Orthodontic Practice Revenue Calculator</h1>
         <h2>Direct-to-Consumer Patient Generator</h2>
         <h3>Practice Profile</h3>
 
-        <!-- Input fields for user information -->
-        <div class="input-group">
-            <label for="doctorName">Doctor's Name <span class="required-asterisk">*</span></label>
-            <input type="text" id="doctorName" name="doctorName" placeholder="Enter Doctor's Name" required>
-        </div>
-
-        <div class="input-group">
-            <label for="practiceName">Practice Name <span class="required-asterisk">*</span></label>
-            <input type="text" id="practiceName" name="practiceName" placeholder="Enter Practice Name" required>
-        </div>
         <form id="roi-form">
-            <table>
+            <div class="input-group">
+                <label for="doctorName">Doctor's Name <span class="required-asterisk">*</span></label>
+                <input type="text" id="doctorName" name="doctorName" placeholder="Enter Doctor's Name" required aria-label="Doctor's Name">
+            </div>
+
+            <div class="input-group">
+                <label for="practiceName">Practice Name <span class="required-asterisk">*</span></label>
+                <input type="text" id="practiceName" name="practiceName" placeholder="Enter Practice Name" required aria-label="Practice Name">
+            </div>
+
+            <table class="calculator-table">
                 <tr>
                     <td><label for="starts">Practice Starts</label></td>
-                    <td><input type="range" id="starts" min="100" max="1200" step="100" value="100"></td>
+                    <td><input type="range" id="starts" min="100" max="1200" step="100" value="100" aria-label="Practice Starts"></td>
                     <td><strong><span id="starts-value">100</span></strong></td>
                 </tr>
                 <tr>
                     <td><label for="treatmentFee">Treatment Fee</label></td>
-                    <td><input type="range" id="treatmentFee" min="5000" max="9000" step="100" value="6500"></td>
+                    <td><input type="range" id="treatmentFee" min="5000" max="9000" step="100" value="6500" aria-label="Treatment Fee"></td>
                     <td><strong>$<span id="treatmentFee-value">6500</span></strong></td>
                 </tr>
                 <tr>
                     <td><label for="locationCount-slider">Locations</label></td>
-                    <td><input type="range" id="locationCount-slider" min="1" max="3" step="1" value="1" disabled></td>
+                    <td><input type="range" id="locationCount-slider" min="1" max="3" step="1" value="1" disabled aria-label="Location Count"></td>
                     <td><strong><span id="locationCount">1</span></strong></td>
                 </tr>
             </table>
 
             <h3>Campaign Investment</h3>
-            <table>
+            <table class="calculator-table">
                 <tr>
                     <td><label for="managementCost-slider">Management Fee (Monthly)</label></td>
-                    <td><input type="range" id="managementCost-slider" min="750" max="1250" step="50" value="1000" disabled></td>
+                    <td><input type="range" id="managementCost-slider" min="750" max="1250" step="50" value="1000" disabled aria-label="Management Fee"></td>
                     <td><strong>$<span id="managementCost-value">1000</span></strong></td>
                 </tr>
                 <tr>
                     <td><label for="advertisingCost-slider">Advertising (Monthly)</label></td>
-                    <td><input type="range" id="advertisingCost-slider" min="900" max="2000" step="50" value="1433" disabled></td>
+                    <td><input type="range" id="advertisingCost-slider" min="900" max="2000" step="50" value="1433" disabled aria-label="Advertising Cost"></td>
                     <td><strong>$<span id="advertisingCost-value">1433</span></strong></td>
                 </tr>
             </table>
@@ -69,16 +69,16 @@
                 <tr><td>Dental Insurance Bonus</td><td>$<span id="dentalInsuranceBonus">0</span></td></tr>
             </table>
         </form>
-		        <!-- Form for sending ROI summary by email -->
+
         <h3>Email Your ROI Opportunity</h3>
         <form id="email-form">
             <div class="input-group">
                 <label for="email">Your Email <span class="required-asterisk">*</span></label>
-                <input type="email" id="email" name="email" required placeholder="Enter your email">
+                <input type="email" id="email" name="email" required placeholder="Enter your email" aria-label="Email">
             </div>
             <button type="button" onclick="sendEmailSummary()">Send ROI Summary</button>
         </form>
-    </div>
+    </main>
     <script src="script.js"></script>
 </body>
 </html>

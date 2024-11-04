@@ -1,114 +1,159 @@
-/* General reset and styling */
+/* Variables for color scheme and typography */
+:root {
+    --primary-bg-color: #f5f7fa;
+    --container-bg-color: white;
+    --primary-color: #333;
+    --secondary-color: #296e94; /* Main color from home page */
+    --button-bg-color: #296e94;
+    --button-hover-bg-color: #2a7ca6;
+    --font-family: 'Open Sans', sans-serif;
+}
+
+/* General reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: var(--font-family);
 }
 
 body {
-    background-color: #f0f2f5;
+    background-color: var(--primary-bg-color);
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
 }
 
+/* Container styling */
 .container {
-    background-color: white;
+    background-color: var(--container-bg-color);
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    width: 400px;
-    max-width: 100%;
-    margin: 20px 0;
-    transition: box-shadow 0.3s ease;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px;
+    color: var(--primary-color);
+    font-family: var(--font-family);
 }
 
-.container:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-}
-
-/* Heading styles */
+/* Headings */
 h1, h2, h3 {
     text-align: center;
-    color: #333;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
-h1 { font-size: 24px; }
-h2 { font-size: 20px; color: #444; }
-h3 { font-size: 18px; color: #555; margin-top: 15px; }
+h1 {
+    color: var(--secondary-color);
+    font-size: 26px;
+}
 
-/* Input styling */
+h2 {
+    font-size: 22px;
+}
+
+h3 {
+    font-size: 18px;
+    color: var(--primary-color);
+}
+
+/* Form inputs */
 .input-group {
-    display: flex;
-    flex-direction: column;
     margin-bottom: 15px;
 }
 
 .input-group label {
     font-size: 14px;
-    color: #333;
+    color: var(--primary-color);
     margin-bottom: 5px;
+    display: block;
 }
 
 .input-group input[type="text"],
 .input-group input[type="email"] {
+    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s;
 }
 
 .input-group input[type="text"]:focus,
 .input-group input[type="email"]:focus {
-    border-color: #007bff;
+    border-color: var(--secondary-color);
     outline: none;
 }
 
 /* Table styling */
-table {
+.calculator-table, .output-table {
     width: 100%;
-    margin-bottom: 20px;
     border-collapse: collapse;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    padding: 10px; /* Adds buffer around entire table */
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
 }
 
-/* Output table styling */
-.output-table {
-    width: 100%;
-    margin-top: 20px;
-    background-color: #fafafa;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+/* Right-align numeric values */
+.calculator-table td:last-child,
+.output-table td:last-child {
+    text-align: right;
+    padding-right: 10px; /* Additional space for right alignment */
+}
+
+.calculator-table td, .output-table td {
+    padding: 5px; /* Reduced padding between cells */
 }
 
 /* Button styling */
 button {
     width: 100%;
     padding: 12px;
-    background-color: #28a745;
+    background-color: var(--button-bg-color);
     color: white;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s, transform 0.2s;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
 }
 
-button:hover { background-color: #218838; transform: scale(1.02); }
-button:active { background-color: #1e7e34; transform: scale(0.98); }
+button:hover {
+    background-color: var(--button-hover-bg-color);
+    transform: scale(1.02);
+}
+
+button:active {
+    transform: scale(0.98);
+}
 
 /* Responsive styling */
-@media (max-width: 480px) {
-    .container { padding: 20px; }
-    h1 { font-size: 20px; }
-    h2 { font-size: 18px; }
-    h3 { font-size: 16px; }
-    button { font-size: 14px; }
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    button {
+        font-size: 14px;
+    }
 }
 
+/* Required asterisk */
 .required-asterisk {
     color: red;
     font-weight: bold;
