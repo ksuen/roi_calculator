@@ -1,9 +1,12 @@
+
 // Constants for calculations
 const LEADS_TO_CONSULTS = 60 / 156;
 const CONSULTS_TO_STARTS = 36 / 60;
 const STARTS_TO_LEADS_RATE = 156 / 400;
 const EOB_PAYOUT = 86;
 const FREQUENCY = 2;
+const MANAGEMENT_COST = 12000;
+const ADVERTISING_COST = 17200;
 
 // Determine location count based on starts
 function getLocationCount(starts) {
@@ -14,17 +17,6 @@ function getLocationCount(starts) {
 function updateLocationCountSlider(locationCount) {
     document.getElementById('locationCount-slider').value = locationCount;
     document.getElementById('locationCount').textContent = locationCount;
-}
-
-// Retrieve and update management and advertising costs
-function updateCosts() {
-    const managementCost = parseFloat(document.getElementById('managementCost-slider').value);
-    const advertisingCost = parseFloat(document.getElementById('advertisingCost-slider').value);
-
-    document.getElementById('managementCost-value').textContent = managementCost.toLocaleString();
-    document.getElementById('advertisingCost-value').textContent = advertisingCost.toLocaleString();
-
-    return { managementCost, advertisingCost };
 }
 
 // Calculate leads from starts
@@ -63,15 +55,18 @@ function calculateDentalInsuranceBonus(practiceStarts, dtcStarts) {
     return bonus;
 }
 
-// No changes needed in the calculateDTCROI function since it now receives adjusted costs
-// Calculate ROI
-function calculateDTCROI(dtcRevenue, managementCost, advertisingCost) {
-    const totalCost = (managementCost + advertisingCost) * 12;
-    const dtcROI = Math.ceil(((dtcRevenue / totalCost) - 1) * 100);
+// Calculate ROI including practice and DTC revenue
+function calculateDTCROI(dtcRevenue, treatmentFee, managementCost, advertisingCost) {
+    // Calculate the total annual cost
+    const totalCost = managementCost + advertisingCost;
+
+    // Calculate ROI as a percentage and round to the nearest integer
+    const dtcROI = Math.ceil(((dtcRevenue - totalCost) / totalCost) * 100);
     document.getElementById('dtcROI').textContent = `${dtcROI}%`;
     return dtcROI;
 }
 
+// Update all calculated values
 function updateAllValues() {
     const practiceStarts = parseFloat(document.getElementById('starts').value);
     const treatmentFeeValue = parseFloat(document.getElementById('treatmentFee').value);
@@ -88,18 +83,16 @@ function updateAllValues() {
     const locationCount = getLocationCount(practiceStarts);
     updateLocationCountSlider(locationCount);
 
-    const { managementCost, advertisingCost } = updateCosts();
-    const adjustedManagementCost = managementCost * locationCount;
-    const adjustedAdvertisingCost = advertisingCost * locationCount;
+    const adjustedManagementCost = MANAGEMENT_COST * locationCount;
+    const adjustedAdvertisingCost = ADVERTISING_COST * locationCount;
 
-    calculateDTCROI(dtcRevenue, adjustedManagementCost, adjustedAdvertisingCost);
+    // Calculate ROI using total revenue (DTC revenue + practice revenue)
+    calculateDTCROI(dtcRevenue, treatmentFeeValue, adjustedManagementCost, adjustedAdvertisingCost);
 }
 
 window.addEventListener('DOMContentLoaded', updateAllValues);
 document.getElementById('starts').addEventListener('input', updateAllValues);
 document.getElementById('treatmentFee').addEventListener('input', updateAllValues);
-//document.getElementById('managementCost-slider').addEventListener('input', updateAllValues);
-//document.getElementById('advertisingCost-slider').addEventListener('input', updateAllValues);
 
 function sendEmailSummary() {
     const doctorName = document.getElementById('doctorName').value;
@@ -109,7 +102,6 @@ function sendEmailSummary() {
         alert("Please fill in both the Doctor's Name and Email fields.");
         return;
     }
-
 
     const practiceName = document.getElementById('practiceName').value;
     const starts = document.getElementById('starts-value').textContent;
@@ -123,6 +115,8 @@ function sendEmailSummary() {
     const dtcRevenue = document.getElementById('dtcRevenue').textContent;
     const dtcROI = document.getElementById('dtcROI').textContent;
     const dentalInsuranceBonus = document.getElementById('dentalInsuranceBonus').textContent;
+    const totalRevenue = document.getElementById('totalRevenue').textContent;
+    const totalCost = document.getElementById('totalCost').textContent;
 
     const emailContent = `
         Doctor's Name: ${doctorName}
@@ -138,6 +132,8 @@ function sendEmailSummary() {
         - Consults: ${dtcConsults}
         - Starts: ${dtcStarts}
         - Your Starts New Revenue: $${dtcRevenue}
+        - Total Revenue: $${totalRevenue}
+        - Total Cost (Annual): $${totalCost}
 
         Your Return on Investment (ROI):
         - ROI: ${dtcROI}
